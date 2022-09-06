@@ -1,14 +1,29 @@
 const express = require('express');
 const router = express.Router();
+const {
+    getHashPassword,
+    isPasswordMatch
+} = require("../utils//hashing");
+const {
+    getUserByUsername,
+} = require("../models/model");
+const createToken = require("../utils/token");
 
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const prisma = require('../utils/prisma.js')
+const secretKey = process.env.JWT_SECRET;
 
 router.post('/', async (req, res) => {
     const { username, password } = req.body;
     // Get the username and password from the request body
+    const user = await getUserByUsername(username);
+    if (user) {
+        const checkPassword = await isPasswordMatch(password, user.password);
 
+        if (checkPassword) {
+            const token = createToken(password, secretKey);
+            return res.status(200).json({ token });
+        }
+    }
+    return res.status(401).json({ error: 'Invalid username or password' });
     // Check that a user with that username exists in the database
     // Use bcrypt to check that the provided password matches the hashed password on the user
     // If either of these checks fail, respond with a 401 "Invalid username or password" error
