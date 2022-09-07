@@ -1,5 +1,6 @@
 const { Prisma } = require('@prisma/client');
 const prisma = require('../utils/prisma');
+const {getErrorCode} = require('../utils/errorCode');
 
 const createUser = async (username, password) => {
     try {
@@ -16,13 +17,7 @@ const createUser = async (username, password) => {
 
     } catch (e) {
         console.log({ e });
-        if (e instanceof Prisma.PrismauserKnownRequestError) {
-
-            if (e.code === "P2002") {
-                return { status: 409, data: { error: `A user with the provided field already exists` } }
-            }
-        }
-        return;
+        return getErrorCode(e,'user');
     }
 
 }

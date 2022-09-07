@@ -20,7 +20,8 @@ router.post('/', async (req, res) => {
 
         if (checkPassword) {
             const token = createToken(password, secretKey);
-            return res.status(200).json({ token });
+            console.log(token);
+            return res.status(200).json({token});
         }
     }
     return res.status(401).json({ error: 'Invalid username or password' });

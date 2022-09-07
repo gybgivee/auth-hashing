@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
     // Save the user using the prisma user model, setting their password to the hashed version
     
     // Respond back to the client with the created users username and id
-    res.status(201).json({ user })
+    res.status(201).json(user)
 });
 
 module.exports = router;
