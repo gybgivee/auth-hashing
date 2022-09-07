@@ -1,6 +1,6 @@
 const { Prisma } = require('@prisma/client');
 const prisma = require('../utils/prisma');
-const {getErrorCode} = require('../utils/errorCode');
+const { getErrorCode } = require('../utils/errorCode');
 
 const createUser = async (username, password) => {
     try {
@@ -13,22 +13,30 @@ const createUser = async (username, password) => {
 
             });
         console.log({ user });
-        return { status: 201, data: { user } }
+        return {
+            status: 201,
+            data: {
+                user: {
+                    id: user.id,
+                    username: user.username
+                }
+            }
+        }
 
     } catch (e) {
         console.log({ e });
-        return getErrorCode(e,'user');
+        return getErrorCode(e, 'user');
     }
 
 }
-const getUserByUsername = async(username) => {
+const getUserByUsername = async (username) => {
     try {
         const user = await prisma.user.findUnique({
-            where:{
+            where: {
                 username
             }
         });
-        console.log({user});
+        console.log({ user });
         return user;
 
     } catch (e) {
